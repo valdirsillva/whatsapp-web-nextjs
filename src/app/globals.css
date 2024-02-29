@@ -24,10 +24,36 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+
+    overflow: hidden;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* custom scrollbar customized */
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 0;
+  cursor: not-allowed;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* background: #64B819; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  /* background: transparent; */
+  background: #D1D7DB;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  /* background: rgb(75, 80, 80);  */
 }
