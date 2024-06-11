@@ -11,7 +11,8 @@ import djMarchimello from "../../public/dj-marshimello.jpg"
 import agatha from "../../public/agathaa.jpg"
 import alice from "../../public/alice.jpg"
 import brenda from "../../public/brenda.jpg"
-import screen from "../../public/native-desktop-wpp.png"
+import { Screen } from "../components/screen"
+import { TimelineMessage } from "@/components/timeline-message";
 
 export default function Home() {
   return (
@@ -184,17 +185,8 @@ export default function Home() {
 
         {/* area das conversas */}
         <div className="w-full h-[735px] flex bg-[#222e35] -mt-[59px]">
-            <div className="w-full flex flex-col items-center justify-center">
-              <Image src={screen} alt="" className="w-[320px] h-[188px]"/>
-
-              <h4 className="font-light text-3xl mt-10 text-[#E9EDEFE] text-center">Descarregar o WhatsApp para <br/> Windows</h4>
-
-              <span className="w-[560px] text-center text-[#8696A0] mt-6">
-              Descarregue a aplicação para Windows para fazer chamadas, partilhar o ecrã e ter uma experiência mais rápida.
-              </span>
-
-              <button type="button" className="w-[160px]  text-sm text-center text-[#111B21] bg-[#00A884] py-[8px] rounded-3xl mt-8">Obter a aplicação</button>
-            </div>
+           {/* <Screen /> */}
+           <TimelineMessage />
         </div>
       </div>
     </section>
