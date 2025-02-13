@@ -1,6 +1,9 @@
-import Image from "next/image";
+"use client"
 
-import { ListFilter, MessageCircleCode, MessageSquarePlus, MoreVertical, Orbit, Users2 } from "lucide-react";
+import Image from "next/image";
+import React, { useState, useEffect } from "react"
+
+import { ListFilter, MessageCircleCode, MessageSquarePlus, MoreVertical, Orbit, Send, Users2 } from "lucide-react";
 
 import user from "../../public/user.png"
 import esmeralda from "../../public/esmeralda.jpg"
@@ -11,10 +14,57 @@ import djMarchimello from "../../public/dj-marshimello.jpg"
 import agatha from "../../public/agathaa.jpg"
 import alice from "../../public/alice.jpg"
 import brenda from "../../public/brenda.jpg"
-import { Screen } from "../components/screen"
-import { TimelineMessage } from "@/components/timeline-message";
+
+import { socket } from "../socket/"
+import { MessageReceiver } from "@/components/message-receiver"
+import { MessageAuthor } from "@/components/message-author"
 
 export default function Home() {
+  const [isConnected, setIsConnected] = useState(socket.connected)
+  const [fooEvents, setFooEvents] = useState<string[]>([])
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState()
+
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true)
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    function onFooEvent(value: string) {
+      setFooEvents((previous) => [...previous, value])
+    }
+
+    socket.on('connect', onConnect)
+    socket.on('disconnect', onDisconnect)
+    socket.on('foo', onFooEvent)
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('foo', onFooEvent);
+    }
+  }, [messages])
+
+  const onSubmit = () => {
+    // e.preventDefault()
+    socket.emit('new message', { 
+      username: '~Jhon Doe',
+      phoneNumber: '+55 97760-9090',
+      message
+    })
+    onMessages()
+  }
+
+  const onMessages = () => {
+    socket.on('response', function(data) {
+      setMessages(data)
+    })
+  }
+
   return (
     <section >
       <header>
@@ -184,9 +234,27 @@ export default function Home() {
         </div>
 
         {/* area das conversas */}
-        <div className="w-full h-[735px] flex bg-[#222e35] -mt-[59px]">
+        <div className="w-full h-[735px] flex flex-col bg-[#222e35] -mt-[59px]">
            {/* <Screen /> */}
-           <TimelineMessage />
+           {/* <TimelineMessage /> */}
+           <section className="flex flex-row flex-wrap">
+             {/* <MessageReceiver data={{messages}} /> */}
+             <MessageAuthor data={{messages}} />
+           </section>
+          
+            <div className="flex gap-5 items-center w-8/12 absolute bottom-10 px-20">
+                <input 
+                  type="text" 
+                  name="message" 
+                  onChange={(e) => setMessage(e.target.value)}  
+                  className="w-full h-[35px] rounded-md bg-[#1a1919] py-7 px-8 text-[13px] outline-none" 
+                />
+
+                <Send size={40} 
+                  className="cursor-pointer"
+                  onClick={onSubmit}
+                />
+            </div>    
         </div>
       </div>
     </section>
